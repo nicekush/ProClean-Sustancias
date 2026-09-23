@@ -1,1 +1,512 @@
-input:not([type=checkbox]){width:100%;padding:16px;font:inherit;font-size:18px;border:2px solid #a7bbc8;border-radius:10px;min-height:56px}input[type=checkbox]{width:26px;height:26px;vertical-align:middle;margin-right:12px}.campaign-logo{width:160px;max-width:60%;background:white;padding:5px;border-radius:12px;margin-bottom:20px}#screen.pending{border-top:8px solid #d59a12;background:#fff9e9}canvas{display:block;width:100%;height:200px;border:2px solid #7894a5;border-radius:12px;touch-action:none;background:white}.signature-help{font-size:15px}.summary{background:#e8f0f5;padding:18px;border-radius:10px;line-height:1.8;margin:18px 0}.summary dt{font-weight:bold}.summary dd{margin:0 0 10px;overflow-wrap:anywhere}.accept{font-size:17px;line-height:1.5;font-weight:normal}.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.toolbar label{flex:1;margin:0}.toolbar button{min-height:56px}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px}.metric{padding:20px;background:#eaf1f6;border-radius:10px}.metric b{display:block;font-size:30px}.scroll{overflow:auto}.status-approved{color:#14683f}.status-blocked{color:#ad202c}.notice{background:#fff1cc;padding:16px;border-radius:10px;line-height:1.5}button{touch-action:manipulation}#screen.result.amber{background:#77530b}[hidden]{display:none!important}.admin main{max-width:1200px}.admin pre{white-space:pre-wrap;overflow-wrap:anywhere}.admin canvas{max-width:600px}
+/* Formularios e Inputs */
+label {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--slate-600);
+  margin: 16px 0 8px;
+}
+
+input:not([type=checkbox]), select, textarea {
+  width: 100%;
+  padding: 14px 16px;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  border: 1.5px solid var(--slate-300);
+  border-radius: var(--radius-md);
+  background: #ffffff;
+  color: var(--slate-900);
+  min-height: 52px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-shadow);
+}
+
+input[type=checkbox] {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--orange);
+  vertical-align: middle;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.accept {
+  display: flex;
+  align-items: flex-start;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--slate-700);
+  font-weight: 500;
+  margin: 20px 0;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+/* Firma Digital y CMZ */
+.campaign-logo {
+  width: 150px;
+  max-width: 55%;
+  background: #ffffff;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+
+#screen.pending {
+  border-top: 8px solid var(--amber);
+  background: #ffffff;
+}
+
+canvas {
+  display: block;
+  width: 100%;
+  height: 210px;
+  border: 2px dashed var(--slate-300);
+  border-radius: var(--radius-lg);
+  touch-action: none;
+  background: #ffffff;
+  margin: 10px 0 12px;
+}
+
+.signature-help {
+  font-size: 13px;
+  color: var(--slate-500);
+  margin-bottom: 6px;
+}
+
+.summary {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  line-height: 1.7;
+  font-size: 14px;
+  color: var(--slate-700);
+  margin: 16px 0;
+}
+
+.summary dt {
+  font-weight: 800;
+  color: var(--slate-900);
+  margin-top: 10px;
+}
+
+.summary dt:first-child {
+  margin-top: 0;
+}
+
+.summary dd {
+  margin: 2px 0 10px 0;
+  color: var(--slate-600);
+  overflow-wrap: anywhere;
+}
+
+/* =========================================
+   PANEL DE ADMINISTRACIÓN (ProClean Elite)
+   ========================================= */
+
+.admin-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-600);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  color: var(--orange);
+  background: var(--orange-light);
+}
+
+.nav-logout {
+  background: transparent;
+  color: var(--rose-dark);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 14px;
+  border: 1px solid var(--rose-border);
+  border-radius: var(--radius-sm);
+}
+
+.nav-logout:hover {
+  background: var(--rose-light);
+}
+
+.panel-login {
+  max-width: 440px;
+  margin: 40px auto;
+  padding: 36px 32px;
+}
+
+.login-desc {
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.dashboard-subtitle {
+  font-size: 14px;
+  color: var(--slate-500);
+  margin-bottom: 0;
+}
+
+/* Toolbar de Filtros */
+.toolbar-panel {
+  padding: 20px 24px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-field {
+  flex: 1;
+  min-width: 170px;
+}
+
+.filter-field label {
+  margin-top: 0;
+}
+
+.toolbar button {
+  min-height: 52px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+}
+
+.toolbar .btn-primary {
+  width: auto;
+  background: var(--slate-900);
+  box-shadow: none;
+}
+
+.toolbar .btn-primary:hover {
+  background: var(--slate-800);
+}
+
+.btn-export {
+  display: inline-flex;
+  align-items: center;
+  background: var(--orange);
+  color: #ffffff;
+  box-shadow: 0 4px 12px var(--orange-shadow);
+}
+
+.btn-export:hover:not(:disabled) {
+  background: var(--orange-hover);
+}
+
+.count-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slate-500);
+  margin: 18px 0 16px;
+}
+
+/* Tarjetas KPI (Métricas) */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.metric {
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.metric:hover {
+  background: #ffffff;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.metric-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate-500);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.metric b {
+  display: block;
+  font-size: 32px;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  color: var(--slate-900);
+  line-height: 1;
+}
+
+/* Colores Semánticos para Métricas */
+.metric-approved {
+  border-top: 4px solid var(--emerald);
+}
+.metric-approved b {
+  color: var(--emerald-dark);
+}
+
+.metric-blocked {
+  border-top: 4px solid var(--rose);
+}
+.metric-blocked b {
+  color: var(--rose-dark);
+}
+
+.metric-pending_cmz {
+  border-top: 4px solid var(--amber);
+}
+.metric-pending_cmz b {
+  color: var(--amber-dark);
+}
+
+.metric-ratio {
+  border-top: 4px solid var(--orange);
+}
+.metric-ratio b {
+  color: var(--orange);
+}
+
+/* Tabla Maestra (Data-Grid) */
+.table-panel {
+  padding: 0;
+  overflow: hidden;
+}
+
+.scroll-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+thead {
+  background: var(--slate-50);
+  border-bottom: 1px solid var(--slate-200);
+}
+
+th {
+  padding: 14px 18px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--slate-500);
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--slate-100);
+  transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+  background-color: var(--slate-50);
+}
+
+td {
+  padding: 16px 18px;
+  vertical-align: middle;
+  color: var(--slate-800);
+}
+
+.cell-date {
+  font-size: 13px;
+  color: var(--slate-600);
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+}
+
+.badge-plate {
+  font-family: 'JetBrains Mono', monospace, sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  background: var(--slate-100);
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  letter-spacing: 0.05em;
+  color: var(--slate-800);
+  display: inline-block;
+}
+
+.badge-area {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.badge-area.wet {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge-area.dry {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Badges de Estado */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.status-approved {
+  background: var(--emerald-light);
+  color: var(--emerald-dark);
+  border: 1px solid var(--emerald-border);
+}
+
+.status-blocked {
+  background: var(--rose-light);
+  color: var(--rose-dark);
+  border: 1px solid var(--rose-border);
+}
+
+.status-pending_cmz {
+  background: var(--amber-light);
+  color: var(--amber-dark);
+  border: 1px solid var(--amber-border);
+}
+
+.status-in_progress, .status-abandoned {
+  background: var(--slate-100);
+  color: var(--slate-600);
+  border: 1px solid var(--slate-200);
+}
+
+.btn-table {
+  background: #ffffff;
+  color: var(--slate-700);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.15s;
+}
+
+.btn-table:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: var(--orange-light);
+}
+
+.btn-load-more {
+  display: block;
+  width: calc(100% - 32px);
+  margin: 16px auto;
+  padding: 12px;
+  background: var(--slate-100);
+  color: var(--slate-700);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.btn-load-more:hover {
+  background: var(--slate-200);
+}
+
+/* Panel de Detalle (Inspector) */
+.detail-panel {
+  border-left: 6px solid var(--orange);
+  margin-top: 32px;
+  box-shadow: var(--shadow-md);
+}
+
+.detail-panel h2 {
+  margin-top: 0;
+}
+
+.detail-hash {
+  background: var(--slate-100);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--slate-600);
+  word-break: break-all;
+  margin-top: 6px;
+}
+
+#saved-signature {
+  max-width: 480px;
+  height: 180px;
+  border: 1.5px solid var(--slate-300);
+  margin: 12px 0 16px;
+}
+
+/* Utilidades */
+[hidden] {
+  display: none !important;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 900px) {
+  .admin-main {
+    padding: 16px 14px 48px;
+  }
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbar button {
+    width: 100%;
+  }
+}
