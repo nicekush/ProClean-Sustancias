@@ -25,6 +25,8 @@
       <button id="logout" class="nav-logout" hidden>Cerrar sesión</button>
     </nav>
     <div id="error" class="error" role="alert" hidden></div>
+    
+    <!-- Login Panel -->
     <section id="login" class="panel panel-login">
       <h1>Administración</h1>
       <p class="login-desc">Ingresa tus credenciales autorizadas de ProClean MG.</p>
@@ -36,48 +38,104 @@
         <button class="continue">INGRESAR</button>
       </form>
     </section>
+
+    <!-- Main Dashboard -->
     <section id="dashboard" hidden>
       <div class="dashboard-header">
-        <h1>Registros e indicadores</h1>
-        <p class="dashboard-subtitle">Consultas operacionales registradas en faena. Horario oficial de Chile (America/Santiago).</p>
+        <h1>Control Operacional Super Sucker</h1>
+        <p class="dashboard-subtitle">Plataforma de auditoría, indicadores y gestión de flota para Faena Zaldívar.</p>
       </div>
-      <div class="panel toolbar-panel">
-        <form id="filters" class="toolbar">
-          <div class="filter-field">
-            <label for="from">Desde</label>
-            <input id="from" type="date" required>
-          </div>
-          <div class="filter-field">
-            <label for="to">Hasta (inclusive)</label>
-            <input id="to" type="date" required>
-          </div>
-          <button type="submit" class="btn-primary">Consultar</button>
-          <button type="button" id="export" class="btn-export" disabled>
-            Exportar CSV para Excel
-          </button>
-        </form>
-        <p id="count" class="secondary count-text"></p>
-        <div id="metrics" class="metric-grid"></div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-tabs">
+        <button id="tab-analytics" class="admin-tab active" type="button">Indicadores y Auditoría</button>
+        <button id="tab-fleet" class="admin-tab" type="button">Gestión de Operadores y Camiones</button>
       </div>
-      <div class="panel table-panel">
-        <div class="scroll-table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha y Hora</th>
-                <th>Operador</th>
-                <th>Patente</th>
-                <th>Área</th>
-                <th>Estado</th>
-                <th>Detalle</th>
-              </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-          </table>
+
+      <!-- Tab 1: Analytics and Records View -->
+      <div id="view-analytics">
+        <div class="panel toolbar-panel">
+          <form id="filters" class="toolbar">
+            <div class="filter-field">
+              <label for="from">Desde</label>
+              <input id="from" type="date" required>
+            </div>
+            <div class="filter-field">
+              <label for="to">Hasta (inclusive)</label>
+              <input id="to" type="date" required>
+            </div>
+            <button type="submit" class="btn-primary">Consultar</button>
+            <button type="button" id="export" class="btn-export" disabled>
+              Exportar CSV para Excel
+            </button>
+          </form>
+          <p id="count" class="secondary count-text"></p>
+          <div id="metrics" class="metric-grid"></div>
         </div>
-        <button id="more" class="btn-load-more" hidden>Cargar más registros</button>
+        <div class="panel table-panel">
+          <div class="scroll-table-wrapper">
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha y Hora</th>
+                  <th>Operador</th>
+                  <th>Patente</th>
+                  <th>Área</th>
+                  <th>Estado</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <button id="more" class="btn-load-more" hidden>Cargar más registros</button>
+        </div>
+        <section id="detail" class="panel detail-panel" hidden></section>
       </div>
-      <section id="detail" class="panel detail-panel" hidden></section>
+
+      <!-- Tab 2: Fleet & Operators Management View -->
+      <div id="view-fleet" hidden>
+        <div class="fleet-grid">
+          
+          <!-- Column 1: Operators -->
+          <div class="panel fleet-card">
+            <div class="fleet-card-header">
+              <h2>Operadores Autorizados</h2>
+              <span class="fleet-count" id="operators-count">0 registrados</span>
+            </div>
+            <p class="fleet-card-desc">Operadores habilitados para seleccionar en terreno desde su celular.</p>
+            
+            <form id="form-add-operator" class="fleet-add-form">
+              <input id="new-operator-name" type="text" placeholder="Nombre y Apellido (ej: Juan Pérez)" required minlength="3" maxlength="80">
+              <button type="submit" class="btn-add">+ Agregar Operador</button>
+            </form>
+
+            <div id="operators-list" class="fleet-list">
+              <p class="fleet-empty">Cargando operadores…</p>
+            </div>
+          </div>
+
+          <!-- Column 2: Trucks / Plates -->
+          <div class="panel fleet-card">
+            <div class="fleet-card-header">
+              <h2>Camiones y Patentes</h2>
+              <span class="fleet-count" id="trucks-count">0 registrados</span>
+            </div>
+            <p class="fleet-card-desc">Patentes de camiones Super Sucker habilitados para faena.</p>
+
+            <form id="form-add-truck" class="fleet-add-form">
+              <input id="new-truck-plate" type="text" placeholder="Patente (ej: ABCD12)" required minlength="4" maxlength="12" style="text-transform: uppercase;">
+              <button type="submit" class="btn-add">+ Agregar Patente</button>
+            </form>
+
+            <div id="trucks-list" class="fleet-list">
+              <p class="fleet-empty">Cargando patentes…</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </section>
   </main>
   <script type="module" src="./admin.js"></script>

@@ -2,7 +2,7 @@ import {initializeApp, cert, getApps} from 'firebase-admin/app';
 import {getAuth} from 'firebase-admin/auth';
 import {getFirestore, FieldPath} from 'firebase-admin/firestore';
 import {createHash} from 'node:crypto';
-import {VERSION, people, trucks, questions, transition} from '../shared/flow.js';
+import {VERSION, people as defaultPeople, trucks as defaultTrucks, questions, transition, assertText} from '../shared/flow.js';
 
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status,
@@ -40,9 +40,51 @@ function services() {
   return {auth: getAuth(), db: getFirestore()};
 }
 
+export async function getCatalog(db, onlyActive = false) {
+  let peopleList = [];
+  try {
+    const peopleSnap = await db.collection('people').get();
+    if (peopleSnap.empty) {
+      const now = new Date().toISOString();
+      for (const p of defaultPeople) {
+        const item = { id: p.id, name: p.name, active: true, createdAt: now };
+        await db.collection('people').doc(p.id).set(item);
+        peopleList.push(item);
+      }
+    } else {
+      peopleList = peopleSnap.docs.map(d => d.data());
+    }
+  } catch {
+    peopleList = defaultPeople.map(p => ({ ...p, active: true }));
+  }
+
+  let trucksList = [];
+  try {
+    const trucksSnap = await db.collection('trucks').get();
+    if (trucksSnap.empty) {
+      const now = new Date().toISOString();
+      for (const t of defaultTrucks) {
+        const item = { id: t.id, plate: t.plate, active: true, createdAt: now };
+        await db.collection('trucks').doc(t.id).set(item);
+        trucksList.push(item);
+      }
+    } else {
+      trucksList = trucksSnap.docs.map(d => d.data());
+    }
+  } catch {
+    trucksList = defaultTrucks.map(t => ({ ...t, active: true }));
+  }
+
+  if (onlyActive) {
+    peopleList = peopleList.filter(p => p.active !== false);
+    trucksList = trucksList.filter(t => t.active !== false);
+  }
+  return { people: peopleList, trucks: trucksList };
+}
+
 export async function route(req, {auth, db}, env = process.env) {
   const url = new URL(req.url, 'http://localhost');
-  const path = url.pathname.replace(/^\/api/, '');
+  const path = url.pathname.replace(/^\/\.netlify\/functions\/api/, '').replace(/^\/api/, '');
   const token = req.headers.get('authorization')?.match(/^Bearer (.+)$/)?.[1];
   
   if (!token) fail(401, 'La sesión no está disponible. Recarga e inténtalo nuevamente.');
@@ -56,12 +98,103 @@ export async function route(req, {auth, db}, env = process.env) {
   const admin = (env.ADMIN_UIDS || '').split(',').map(s => s.trim()).filter(Boolean).includes(user.uid) && user.firebase?.sign_in_provider !== 'anonymous';
   const now = new Date().toISOString();
 
+  // Public Catalog for Operators
   if (path === '/catalog' && req.method === 'GET') {
-    return json({people, trucks, admin, enabled: env.OPERATIONS_ENABLED === 'true', version: VERSION});
+    const catalog = await getCatalog(db, true);
+    return json({
+      people: catalog.people,
+      trucks: catalog.trucks,
+      admin,
+      enabled: env.OPERATIONS_ENABLED === 'true',
+      version: VERSION
+    });
   }
 
+  // Admin Routes
   if (path.startsWith('/admin')) {
     if (!admin) fail(403, 'Acceso restringido a administración.');
+
+    // GET /admin/catalog (Full list of people and trucks, active and inactive)
+    if (path === '/admin/catalog' && req.method === 'GET') {
+      const catalog = await getCatalog(db, false);
+      return json(catalog);
+    }
+
+    // POST /admin/people (Add operator)
+    if (path === '/admin/people' && req.method === 'POST') {
+      const raw = await req.text();
+      let body; try { body = JSON.parse(raw); } catch { fail(400, 'Datos no válidos.'); }
+      const name = assertText(body.name, 'el nombre del operador', 3, 80);
+      const id = 'persona-' + createHash('sha256').update(name.toLowerCase().trim()).digest('hex').slice(0, 10);
+      const newPerson = { id, name, active: true, createdAt: now };
+      await db.collection('people').doc(id).set(newPerson);
+      return json(newPerson, 201);
+    }
+
+    // PATCH /admin/people/:id (Toggle active or update name)
+    const personMatch = path.match(/^\/admin\/people\/([a-zA-Z0-9_-]+)$/);
+    if (personMatch && req.method === 'PATCH') {
+      const id = personMatch[1];
+      const raw = await req.text();
+      let body; try { body = JSON.parse(raw); } catch { fail(400, 'Datos no válidos.'); }
+      const docRef = db.collection('people').doc(id);
+      const snap = await docRef.get();
+      if (!snap.exists) fail(404, 'Operador no encontrado.');
+      const updateData = {};
+      if (typeof body.active === 'boolean') updateData.active = body.active;
+      if (body.name) updateData.name = assertText(body.name, 'el nombre del operador', 3, 80);
+      await docRef.set(updateData, { merge: true });
+      return json({ success: true, id, ...updateData });
+    }
+
+    // DELETE /admin/people/:id
+    if (personMatch && req.method === 'DELETE') {
+      const id = personMatch[1];
+      const docRef = db.collection('people').doc(id);
+      const snap = await docRef.get();
+      if (!snap.exists) fail(404, 'Operador no encontrado.');
+      await docRef.delete();
+      return json({ success: true, id });
+    }
+
+    // POST /admin/trucks (Add truck / plate)
+    if (path === '/admin/trucks' && req.method === 'POST') {
+      const raw = await req.text();
+      let body; try { body = JSON.parse(raw); } catch { fail(400, 'Datos no válidos.'); }
+      const plate = assertText(body.plate, 'la patente', 4, 15).toUpperCase().replace(/\s+/g, '');
+      const id = 'camion-' + plate.toLowerCase();
+      const newTruck = { id, plate, active: true, createdAt: now };
+      await db.collection('trucks').doc(id).set(newTruck);
+      return json(newTruck, 201);
+    }
+
+    // PATCH /admin/trucks/:id (Toggle active or update plate)
+    const truckMatch = path.match(/^\/admin\/trucks\/([a-zA-Z0-9_-]+)$/);
+    if (truckMatch && req.method === 'PATCH') {
+      const id = truckMatch[1];
+      const raw = await req.text();
+      let body; try { body = JSON.parse(raw); } catch { fail(400, 'Datos no válidos.'); }
+      const docRef = db.collection('trucks').doc(id);
+      const snap = await docRef.get();
+      if (!snap.exists) fail(404, 'Camión no encontrado.');
+      const updateData = {};
+      if (typeof body.active === 'boolean') updateData.active = body.active;
+      if (body.plate) updateData.plate = assertText(body.plate, 'la patente', 4, 15).toUpperCase().replace(/\s+/g, '');
+      await docRef.set(updateData, { merge: true });
+      return json({ success: true, id, ...updateData });
+    }
+
+    // DELETE /admin/trucks/:id
+    if (truckMatch && req.method === 'DELETE') {
+      const id = truckMatch[1];
+      const docRef = db.collection('trucks').doc(id);
+      const snap = await docRef.get();
+      if (!snap.exists) fail(404, 'Camión no encontrado.');
+      await docRef.delete();
+      return json({ success: true, id });
+    }
+
+    // Records Query
     if (req.method !== 'GET' || path !== '/admin/records') fail(404, 'Ruta no encontrada.');
     const start = url.searchParams.get('start'), end = url.searchParams.get('end');
     if (!start || !end || !Number.isFinite(Date.parse(start)) || !Number.isFinite(Date.parse(end)) || Date.parse(end) <= Date.parse(start) || Date.parse(end) - Date.parse(start) > 32 * 86400000) {
@@ -96,6 +229,7 @@ export async function route(req, {auth, db}, env = process.env) {
     });
   }
 
+  // Consultation Detail
   const match = path.match(/^\/consultations(?:\/([a-f0-9-]{36}))?$/);
   if (!match) fail(404, 'Ruta no encontrada.');
   if (match[1] && req.method === 'GET') {
@@ -124,7 +258,9 @@ export async function route(req, {auth, db}, env = process.env) {
   const ref = db.collection('consultations').doc(id);
 
   if (req.method === 'POST' && !match[1]) {
-    const person = people.find(p => p.id === body.operatorId), truck = trucks.find(t => t.id === body.truckId);
+    const activeCatalog = await getCatalog(db, true);
+    const person = activeCatalog.people.find(p => p.id === body.operatorId);
+    const truck = activeCatalog.trucks.find(t => t.id === body.truckId);
     if (!person || !truck) fail(400, 'Selecciona operador y patente.');
     const r = await db.runTransaction(async tx => {
       const previous = await tx.get(ref);

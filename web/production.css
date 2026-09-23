@@ -510,3 +510,227 @@ td {
     width: 100%;
   }
 }
+
+/* =========================================
+   PESTAÑAS Y GESTIÓN DE FLOTA (OPERADORES Y PATENTES)
+   ========================================= */
+
+.admin-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--slate-200);
+  margin: 24px 0 20px;
+}
+
+.admin-tab {
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--slate-500);
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.admin-tab:hover:not(.active) {
+  color: var(--slate-800);
+  background: var(--slate-100);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.admin-tab.active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+  background: transparent;
+}
+
+/* Grid de Flota */
+.fleet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.fleet-card {
+  padding: 24px;
+}
+
+.fleet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.fleet-card-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--slate-900);
+}
+
+.fleet-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--slate-600);
+  background: var(--slate-100);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.fleet-card-desc {
+  font-size: 13px;
+  color: var(--slate-500);
+  margin-bottom: 20px;
+}
+
+.fleet-add-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.fleet-add-form input {
+  flex: 1;
+  min-height: 46px;
+  padding: 10px 14px;
+  font-size: 14px;
+}
+
+.btn-add {
+  padding: 10px 18px;
+  background: var(--slate-900);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.btn-add:hover {
+  background: var(--orange);
+  box-shadow: 0 4px 12px var(--orange-shadow);
+}
+
+.fleet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.fleet-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: var(--slate-50);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+}
+
+.fleet-item:hover {
+  background: #ffffff;
+  box-shadow: var(--shadow-sm);
+  border-color: var(--slate-300);
+}
+
+.fleet-item.inactive {
+  opacity: 0.65;
+  background: var(--slate-100);
+}
+
+.fleet-item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fleet-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--slate-900);
+}
+
+.fleet-badge {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+}
+
+.badge-active {
+  background: var(--emerald-light);
+  color: var(--emerald-dark);
+  border: 1px solid var(--emerald-border);
+}
+
+.badge-inactive {
+  background: var(--slate-200);
+  color: var(--slate-600);
+}
+
+.fleet-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-fleet-toggle {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--slate-300);
+  background: #ffffff;
+  color: var(--slate-700);
+}
+
+.btn-fleet-toggle:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+  background: var(--orange-light);
+}
+
+.btn-fleet-delete {
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--rose-border);
+  background: var(--rose-light);
+  color: var(--rose-dark);
+}
+
+.btn-fleet-delete:hover {
+  background: #ffe4e6;
+  border-color: var(--rose);
+}
+
+.fleet-empty {
+  text-align: center;
+  color: var(--slate-400);
+  font-size: 14px;
+  padding: 24px;
+}
+
+@media (max-width: 800px) {
+  .fleet-grid {
+    grid-template-columns: 1fr;
+  }
+  .fleet-add-form {
+    flex-direction: column;
+  }
+  .fleet-add-form button {
+    width: 100%;
+  }
+}
