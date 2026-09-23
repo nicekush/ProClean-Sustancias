@@ -66,3 +66,6 @@ Para compilar el frontend para producción:
 ```bash
 npm run build
 ```
+
+---
+*PROClean MG · Control Operacional Zaldívar · Sistema actualizado y verificado.*
